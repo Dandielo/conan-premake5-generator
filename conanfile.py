@@ -100,7 +100,7 @@ class premake(Generator):
         return "\n".join(sections)
 
 class Premake5GeneratorPackage(ConanFile):
-    name = "PremakeGen"
+    name = "premake-generator"
     version = "0.1"
     url = "https://gitlab.dandielo.net/dandielo/premake5-conan"
     license = "MIT"
