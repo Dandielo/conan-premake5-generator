@@ -8,7 +8,7 @@ local conan_modules = { }
 function conan(modules)
     for _, v in ipairs(modules) do
         v = v:lower()
-        assert(conan_modules[v], ("The given module '%%s' couldn't be found, have you added it to your conanfile.txt?"):format(v))
+        assert(conan_modules[v], ("The given module '%s' couldn't be found, have you added it to your conanfile.txt?"):format(v))
         conan_modules[v]()
     end
 end
