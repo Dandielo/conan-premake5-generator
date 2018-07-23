@@ -102,5 +102,9 @@ class premake(Generator):
 class Premake5GeneratorPackage(ConanFile):
     name = "premake-generator"
     version = "0.1"
-    url = "https://gitlab.dandielo.net/dandielo/premake5-conan"
     license = "MIT"
+    url = "https://gitlab.dandielo.net/dandielo/premake5-conan"
+    description = "Premake5 generator for the conan package manager."
+
+    def package(self):
+        pass
