@@ -1,0 +1,10 @@
+image: lasote/conanclang60
+
+build:
+  stage: build
+  tags:
+  - docker
+  script:
+  - conan create . premake-generator/0.1@dandielo/stable
+  - conan user $CONAN_USER -r $CONAN_SERVER -p $CONAN_PASSWORD
+  - conan upload -r $CONAN_SERVER premake-generator/0.1@dandielo/stable
