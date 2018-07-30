@@ -38,6 +38,7 @@ class PremakeDeps(object):
         self.includedirs = get_unique('include_paths')
         self.libdirs = get_unique('lib_paths')
         self.links = get_unique('libs')
+        self.defines = get_unique('defines')
 
         if base == None:
             if hasattr(source, 'debug'):
@@ -48,6 +49,7 @@ class PremakeDeps(object):
     def has_cpp_info(self):
         return (self.includedirs
             or self.libdirs
+            or self.defines
             or self.links
         )
 
@@ -88,6 +90,7 @@ class PremakeModule(object):
         lines += self.build_property("includedirs", deps.includedirs, True, IndentLevel=indentation)
         lines += self.build_property("libdirs", deps.libdirs, True, IndentLevel=indentation)
         lines += self.build_property("links", deps.links)
+        lines += self.build_property("defines", deps.defines)
 
         if lines and filter != None:
             lines.insert(0, 'filter { "%s" }' % '", "'.join(filter))
