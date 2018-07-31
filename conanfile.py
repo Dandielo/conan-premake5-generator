@@ -37,6 +37,7 @@ class PremakeDeps(object):
 
         self.includedirs = get_unique('include_paths')
         self.libdirs = get_unique('lib_paths')
+        self.bindirs = get_unique('bin_paths')
         self.links = get_unique('libs')
         self.defines = get_unique('defines')
 
@@ -51,6 +52,7 @@ class PremakeDeps(object):
             or self.libdirs
             or self.defines
             or self.links
+            or self.bindirs
         )
 
 
@@ -80,6 +82,29 @@ class PremakeModule(object):
 
         return lines
 
+    def build_commands_property(self, dirs_from, to, command, files="*", stage="", IndentLevel=0):
+        indent_prop = ''.join(["    "] * IndentLevel)
+        indent_prop_arg = ''.join(["    "] * (IndentLevel + 1))
+        lines = []
+
+        if command not in ["copy"]:
+            return lines
+
+        # make sure we end the ratget dir with a slash
+        to = normpath(to) + "/"
+
+        if dirs_from:
+            lines.append("%s%scommands{" % (indent_prop, stage))
+            for dir_from in dirs_from:
+                dir_from = normpath(dir_from).replace("\\", "/")
+                # For the 'copy' command
+                if command == "copy":
+                    lines.append('%s\'{COPY} "%s/%s" "%s",\'' % (indent_prop_arg, dir_from, files, to))
+            lines.append("%s}" % indent_prop)
+
+        return lines
+
+
     def build_property_group(self, deps, filter=None):
 
         indentation = 0
@@ -89,8 +114,9 @@ class PremakeModule(object):
         lines = []
         lines += self.build_property("includedirs", deps.includedirs, True, IndentLevel=indentation)
         lines += self.build_property("libdirs", deps.libdirs, True, IndentLevel=indentation)
-        lines += self.build_property("links", deps.links)
-        lines += self.build_property("defines", deps.defines)
+        lines += self.build_property("links", deps.links, False, IndentLevel=indentation)
+        lines += self.build_property("defines", deps.defines, False, IndentLevel=indentation)
+        lines += self.build_commands_property(deps.bindirs, "%{cfg.buildtarget.outdir}", "copy", files="*.dll", stage="postbuild", IndentLevel=indentation)
 
         if lines and filter != None:
             lines.insert(0, 'filter { "%s" }' % '", "'.join(filter))
