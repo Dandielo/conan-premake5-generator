@@ -99,7 +99,7 @@ class PremakeModule(object):
                 dir_from = normpath(dir_from).replace("\\", "/")
                 # For the 'copy' command
                 if command == "copy":
-                    lines.append('%s\'{COPY} "%s/%s" "%s",\'' % (indent_prop_arg, dir_from, files, to))
+                    lines.append('%s\'{COPY} "%s/%s" "%s"\',' % (indent_prop_arg, dir_from, files, to))
             lines.append("%s}" % indent_prop)
 
         return lines
@@ -116,7 +116,7 @@ class PremakeModule(object):
         lines += self.build_property("libdirs", deps.libdirs, True, IndentLevel=indentation)
         lines += self.build_property("links", deps.links, False, IndentLevel=indentation)
         lines += self.build_property("defines", deps.defines, False, IndentLevel=indentation)
-        lines += self.build_commands_property(deps.bindirs, "%{cfg.buildtarget.outdir}", "copy", files="*.dll", stage="postbuild", IndentLevel=indentation)
+        lines += self.build_commands_property(deps.bindirs, "%{cfg.targetdir}", "copy", files="*.dll", stage="postbuild", IndentLevel=indentation)
 
         if lines and filter != None:
             lines.insert(0, 'filter { "%s" }' % '", "'.join(filter))
