@@ -119,7 +119,7 @@ class PremakeModule(object):
         lines += self.build_commands_property(deps.bindirs, "%{cfg.targetdir}", "copy", files="*.dll", stage="postbuild", IndentLevel=indentation)
 
         if lines and filter != None:
-            lines.insert(0, 'filter { "%s" }' % '", "'.join(filter))
+            lines.insert(0, 'filter { "tags:%s" }' % '", "'.join(filter))
             lines.append('filter { "*" }')
 
         return lines
@@ -131,9 +131,9 @@ class PremakeModule(object):
         lines = []
         lines += self.build_property_group(deps)
         if deps.debug:
-            lines += self.build_property_group(deps.debug, [ "Debug" ])
+            lines += self.build_property_group(deps.debug, [ "conan-debug" ])
         if deps.release:
-            lines += self.build_property_group(deps.release, [ "Release" ])
+            lines += self.build_property_group(deps.release, [ "not conan-debug" ])
 
         if lines:
             funcs = "\n    ".join(lines)
@@ -173,7 +173,7 @@ class premake(Generator):
 
 class Premake5GeneratorPackage(ConanFile):
     name = "premake-generator"
-    version = "0.1"
+    version = "0.2"
     license = "MIT"
     url = "https://gitlab.dandielo.net/dandielo/premake5-conan"
     description = "Premake5 generator for the conan package manager."
